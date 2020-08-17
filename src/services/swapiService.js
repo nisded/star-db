@@ -40,8 +40,8 @@ export default class SwapiService {
     }
 }
 
-const sw = new SwapiService();
-sw.getAllStarships()
-    .then(people => {
-        people.forEach(p => console.log(p.name));
-    });
+// const sw = new SwapiService();
+// sw.getAllPlanets()
+//     .then(planets => {
+//         planets.forEach(p => console.log(p.name));
+//     });
