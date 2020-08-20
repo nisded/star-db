@@ -22,7 +22,7 @@ export default class SwapiService {
     }
 
     async getPerson(id) {
-        const person = this.getResourse(`/people/${id}`);
+        const person = await this.getResourse(`/people/${id}`);
         return this._transformPerson(person);
     }
 

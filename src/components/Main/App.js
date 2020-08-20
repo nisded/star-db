@@ -3,18 +3,23 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from '../Header';
 import RandomPlanet from '../RandomPlanet';
-import ItemList from '../ItemList';
-import PersonDetails from '../PersonDetails';
+import ErrorIndicator from '../ErrorIndicator';
+import PeoplePage from '../PeoplePage';
 
 export default class App extends Component {
     constructor() {
         super();
 
         this.state = {
-            showRandomPlanet: true
+            showRandomPlanet: true,
+            hasError: false
         };
 
         this.toggleRandomPlanet = this.toggleRandomPlanet.bind(this);
+    }
+
+    componentDidCatch() {
+        this.setState({ hasError: true });
     }
 
     toggleRandomPlanet() {
@@ -26,28 +31,25 @@ export default class App extends Component {
     }
 
     render() {
+        if (this.state.hasError)
+            return <ErrorIndicator />;
+
         const randomPlanet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
         const toggleButtonText = this.state.showRandomPlanet ? 'Hide' : 'Show';
+
         return(
             <div className="container">
                 <Header />
                 {randomPlanet}
-                <div className="d-flex flex-row-reverse">
+                <div className="d-flex flex-row-reverse mb-3">
                     <button 
-                        className="toggle-button btn btn-warning mb-3" 
+                        className="toggle-button btn btn-warning" 
                         onClick={this.toggleRandomPlanet}               
                     >
                         {`${toggleButtonText} planet`}
                     </button>
                 </div>
-                <div className="row">
-                    <div className="col-12 col-md-6">
-                        <ItemList />
-                    </div>
-                    <div className="col-12 col-md-6">
-                        <PersonDetails />
-                    </div>
-                </div>
+                <PeoplePage />
             </div>
         );
     }

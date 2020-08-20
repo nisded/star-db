@@ -5,17 +5,18 @@ import swapiService from '../../services/swapiService';
 import Spinner from '../Spinner/Spinner';
 import ErrorIndicator from '../ErrorIndicator';
 
-class RandomPlanet extends Component {
+export default class RandomPlanet extends Component {
     constructor() {
         super();
 
         this.state = {
-            planet: {},
+            planet: null,
             loading: true, 
             error: false
         };
 
         this.swapiService = new swapiService();
+        this.interval = null;
 
         this.updatePlanet = this.updatePlanet.bind(this);
     }
@@ -31,8 +32,6 @@ class RandomPlanet extends Component {
 
     updatePlanet() {
         const id = Math.floor(Math.random()*15) + 2;
-
-        console.log('update ' + id);
 
         this.swapiService.getPlanet(id)
             .then(planet => this.setState({ planet, loading: false, error: false }))
@@ -56,7 +55,7 @@ class RandomPlanet extends Component {
             </div>
         );
     }
-};
+}
 
 const PlanetView = ({ planet }) => {
     const {id, name, population, rotationPeriod, diameter} = planet;
@@ -84,5 +83,3 @@ const PlanetView = ({ planet }) => {
         </React.Fragment>
     );
 };
-
-export default RandomPlanet;
