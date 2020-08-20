@@ -17,11 +17,23 @@ class RandomPlanet extends Component {
 
         this.swapiService = new swapiService();
 
+        this.updatePlanet = this.updatePlanet.bind(this);
+    }
+
+    componentDidMount() {
         this.updatePlanet();
+        this.interval = setInterval(this.updatePlanet, 5000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     updatePlanet() {
         const id = Math.floor(Math.random()*15) + 2;
+
+        console.log('update ' + id);
+
         this.swapiService.getPlanet(id)
             .then(planet => this.setState({ planet, loading: false, error: false }))
             .catch(err => this.setState({ error: true, loading: false }));
@@ -41,7 +53,7 @@ class RandomPlanet extends Component {
                 {spinner}
                 {errorMessage}
                 {content}
-            </div>  
+            </div>
         );
     }
 };
