@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 
 import './ItemDetails.css';
-import swapiService from '../../services/swapiService';
 import Spinner from '../Spinner';
 import ErrorIndicator from '../ErrorIndicator';
-import ErrorBoundary from '../ErrorBoundary';
+
+export const Record = ({ item, field, label }) => {
+    return (
+        <li className="list-group-item">
+            <span className="term">{`${label}:`}</span>
+            <span>{item[field]}</span>
+        </li>
+    );
+};
 
 export default class ItemDetails extends Component {
     constructor() {
@@ -12,11 +19,10 @@ export default class ItemDetails extends Component {
 
         this.state = {
             item: null, 
-            loading: true,
+            imageUrl: null,
+            loading: false,
             error: false
         };
-
-        this.swapiService = new swapiService();
 
         this.updateItem = this.updateItem.bind(this);
     }
@@ -31,26 +37,39 @@ export default class ItemDetails extends Component {
     }
 
     updateItem() {
-        const {itemId} = this.props;
+        const {itemId, getData, getImageUrl} = this.props;
         if (!itemId)
             return;
+        this.setState({loading: true});
 
-        this.swapiService.getPerson(itemId)
-            .then(item => this.setState({ item, loading: false, error: false }))
+        getData(itemId)
+            .then(item => this.setState({ 
+                item, 
+                imageUrl: getImageUrl(itemId), 
+                loading: false, 
+                error: false 
+            }))
             .catch(err => this.setState({ error: true, loading: false }));
     }
 
     render() {
-        if (!this.state.item)
+        if (!this.state.item && !this.state.loading)
             return <p>Select a person from a list</p>;
 
         const loading = this.state.loading ? <Spinner /> : null;
         const error = this.state.error ? <ErrorIndicator /> : null;
 
-        const content = !(loading || error) ? <ItemView item={this.state.item} /> : null;
+        const content = !(loading || error) ? 
+            <ItemView 
+                item={this.state.item} 
+                imageUrl={this.state.imageUrl} 
+                children={this.props.children} 
+            /> 
+        : 
+            null;
 
         return(
-            <div className="person-details card d-flex flex-row">
+            <div className="item-details card d-flex flex-row">
                 {loading}
                 {error}
                 {content}
@@ -59,30 +78,19 @@ export default class ItemDetails extends Component {
     }
 }
 
-const ItemView = ({ item }) => {
-    const {id, name, gender, birthYear, eyeColor} = item;
-
+const ItemView = ({ item, imageUrl, children }) => {
     return (
         <React.Fragment>
-            <img src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`} alt="person" />
+            <img src={imageUrl} alt="person" />
             <div className="card-body">
+                <h3>{item.name}</h3>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item">
-                        <span className="term">Name:</span>
-                        <span>{name}</span>
-                    </li>
-                    <li className="list-group-item">
-                        <span className="term">Gender:</span>
-                        <span>{gender}</span>
-                    </li>
-                    <li className="list-group-item">
-                        <span className="term">Birth Year:</span>
-                        <span>{birthYear}</span>
-                    </li>
-                    <li className="list-group-item">
-                        <span className="term">Eye Color:</span>
-                        <span>{eyeColor}</span>
-                    </li>
+                    {
+                        // clones each child and adds new property (item) to this clone 
+                        React.Children.map(children, child => {
+                            return React.cloneElement(child, {item});
+                        })
+                    }
                 </ul>
             </div>
         </React.Fragment>
