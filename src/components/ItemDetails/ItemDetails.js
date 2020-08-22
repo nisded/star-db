@@ -1,52 +1,53 @@
 import React, { Component } from 'react';
 
-import './PersonDetails.css';
+import './ItemDetails.css';
 import swapiService from '../../services/swapiService';
 import Spinner from '../Spinner';
 import ErrorIndicator from '../ErrorIndicator';
+import ErrorBoundary from '../ErrorBoundary';
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
     constructor() {
         super();
 
         this.state = {
-            person: null, 
+            item: null, 
             loading: true,
             error: false
         };
 
         this.swapiService = new swapiService();
 
-        this.updatePerson = this.updatePerson.bind(this);
+        this.updateItem = this.updateItem.bind(this);
     }
 
     componentDidMount() {
-        this.updatePerson();
+        this.updateItem();
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.personId !== prevProps.personId)
-            this.updatePerson();
+        if (this.props.itemId !== prevProps.itemId)
+            this.updateItem();
     }
 
-    updatePerson() {
-        const {personId} = this.props;
-        if (!personId)
+    updateItem() {
+        const {itemId} = this.props;
+        if (!itemId)
             return;
 
-        this.swapiService.getPerson(personId)
-            .then(person => this.setState({ person, loading: false, error: false }))
+        this.swapiService.getPerson(itemId)
+            .then(item => this.setState({ item, loading: false, error: false }))
             .catch(err => this.setState({ error: true, loading: false }));
     }
 
     render() {
-        if (!this.state.person)
+        if (!this.state.item)
             return <p>Select a person from a list</p>;
 
         const loading = this.state.loading ? <Spinner /> : null;
         const error = this.state.error ? <ErrorIndicator /> : null;
 
-        const content = !(loading || error) ? <PersonView person={this.state.person} /> : null;
+        const content = !(loading || error) ? <ItemView item={this.state.item} /> : null;
 
         return(
             <div className="person-details card d-flex flex-row">
@@ -58,8 +59,8 @@ export default class PersonDetails extends Component {
     }
 }
 
-const PersonView = ({ person }) => {
-    const {id, name, gender, birthYear, eyeColor} = person;
+const ItemView = ({ item }) => {
+    const {id, name, gender, birthYear, eyeColor} = item;
 
     return (
         <React.Fragment>

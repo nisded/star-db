@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 
 import './PeoplePage.css';
 import ItemList from '../ItemList';
-import PersonDetails from '../PersonDetails';
-import ErrorIndicator from '../ErrorIndicator';
+import ItemDetails from '../ItemDetails';
+import swapiService from '../../services/swapiService';
+import Row from '../Row';
+import ErrorBoundary from '../ErrorBoundary';
 
 export default class PeoplePage extends Component {
     constructor() {
@@ -11,14 +13,11 @@ export default class PeoplePage extends Component {
 
         this.state = {
             selectedPerson: null,
-            hasError: false
         };
+
+        this.swapiService = new swapiService();
                 
         this.onPersonSelected = this.onPersonSelected.bind(this);
-    }
-
-    componentDidCatch() {
-        this.setState({ hasError: true });
     }
 
     onPersonSelected(id) {
@@ -28,18 +27,27 @@ export default class PeoplePage extends Component {
     }
 
     render() {
-        if (this.state.hasError)
-            return <ErrorIndicator />;
+        const itemList = (
+            <ItemList 
+                onItemSelected={this.onPersonSelected} 
+                getData={this.swapiService.getAllPeople}
+            >
+                {(i) => `${i.name} (${i.birthYear})`}
+            </ItemList>
+        );
+
+        const itemDetails = (
+            <ErrorBoundary>
+                <ItemDetails 
+                    itemId={this.state.selectedPerson}
+                />
+            </ErrorBoundary>
+        );
             
         return (
-            <div className="row">
-                <div className="col-12 col-md-6">
-                    <ItemList onItemSelected={this.onPersonSelected} />
-                </div>
-                <div className="col-12 col-md-6">
-                    <PersonDetails personId={this.state.selectedPerson} />
-                </div>
-            </div>
+            <ErrorBoundary>
+                <Row left={itemList} right={itemDetails} />
+            </ErrorBoundary>
         );
     }
 }
