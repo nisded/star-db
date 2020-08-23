@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import './RandomPlanet.css';
-import swapiService from '../../services/swapiService';
+import SwapiService from '../../services/SwapiService';
 import Spinner from '../Spinner/Spinner';
 import ErrorIndicator from '../ErrorIndicator';
 
@@ -15,7 +15,7 @@ export default class RandomPlanet extends Component {
             error: false
         };
 
-        this.swapiService = new swapiService();
+        this.swapiService = new SwapiService();
         this.interval = null;
 
         this.updatePlanet = this.updatePlanet.bind(this);

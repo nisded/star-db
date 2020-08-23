@@ -53,7 +53,7 @@ export default class ItemDetails extends Component {
     }
 
     render() {
-        if (!this.state.item && !this.state.loading)
+        if (!this.state.item && !this.state.loading && !this.state.error)
             return <p>Select a person from a list</p>;
 
         const loading = this.state.loading ? <Spinner /> : null;
