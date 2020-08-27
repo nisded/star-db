@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './Header.css';
 
@@ -6,16 +7,16 @@ const Header = () => {
     return(
         <React.Fragment>
             <nav className="navbar navbar-expand">
-                <a href="#" className="navbar-brand">Star DB</a>
+                <Link to="/" className="navbar-brand">Star DB</Link>
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
-                        <a href="/people" className="nav-link">People</a>
+                        <Link to="/people/" className="nav-link">People</Link>
                     </li>
                     <li className="nav-item">
-                        <a href="/planets" className="nav-link">Planets</a>
+                        <Link to="/planets/" className="nav-link">Planets</Link>
                     </li>
                     <li className="nav-item">
-                        <a href="/starships" className="nav-link">Starships</a>
+                        <Link to="/starships/" className="nav-link">Starships</Link>
                     </li>       
                 </ul>
             </nav>

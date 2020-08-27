@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 import Header from '../Header';
@@ -6,7 +7,8 @@ import RandomPlanet from '../RandomPlanet';
 import ErrorBoundary from '../ErrorBoundary';
 import SwapiService from '../../services/SwapiService';
 import { SwapiServiceProvider } from '../swapiServiceContext';
-import { PeoplePage, PlanetPage, StarshipPage } from '../appPages';
+import { PeoplePage, PlanetsPage, StarshipsPage } from '../appPages';
+import { StarshipDetails } from '../SWComponents';
 
 export default class App extends Component {
     constructor() {
@@ -47,15 +49,24 @@ export default class App extends Component {
         return(
             <ErrorBoundary>
                 <SwapiServiceProvider value={this.swapiService}>
-                    <div className="container">
-                        <Header />
-                        {randomPlanet}
-                        {planetToggleButton}
-
-                        <PeoplePage />
-                        <PlanetPage />
-                        <StarshipPage />
-                    </div>
+                    <Router>
+                        <div className="container">
+                            <Header />
+                            {randomPlanet}
+                            {planetToggleButton}
+                            <Switch>
+                                <Route path="/" exact render={() => <h2>Welcome to StarDB</h2>} />
+                                <Route path="/people/:id?" component={PeoplePage} />
+                                <Route path="/planets" exact component={PlanetsPage} />
+                                <Route path="/starships/" exact component={StarshipsPage} />
+                                <Route 
+                                    path="/starships/:id" 
+                                    render={({match, location, history}) => <StarshipDetails itemId={match.params.id} />} 
+                                />
+                                <Redirect to="/" />
+                            </Switch>
+                        </div>
+                    </Router>
                 </SwapiServiceProvider>
             </ErrorBoundary>
         );

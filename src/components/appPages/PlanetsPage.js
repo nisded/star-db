@@ -3,7 +3,7 @@ import Row from '../Row';
 import ErrorBoundary from '../ErrorBoundary';
 import { PlanetList, PlanetDetails } from '../SWComponents';
 
-export default class PeoplePage extends Component {
+export default class PlanetsPage extends Component {
     constructor() {
         super();
 
