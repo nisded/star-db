@@ -3,12 +3,10 @@ import React, { Component } from 'react';
 import './App.css';
 import Header from '../Header';
 import RandomPlanet from '../RandomPlanet';
-import PeoplePage from '../PeoplePage';
 import ErrorBoundary from '../ErrorBoundary';
-import Row from '../Row';
 import SwapiService from '../../services/SwapiService';
-import { PersonDetails, StarshipDetails } from '../SWComponents';
 import { SwapiServiceProvider } from '../swapiServiceContext';
+import { PeoplePage, PlanetPage, StarshipPage } from '../appPages';
 
 export default class App extends Component {
     constructor() {
@@ -34,25 +32,29 @@ export default class App extends Component {
     render() {
         const randomPlanet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
         const toggleButtonText = this.state.showRandomPlanet ? 'Hide' : 'Show';
+
+        const planetToggleButton = (
+            <div className="d-flex flex-row-reverse mb-3">
+                <button 
+                    className="toggle-button btn btn-warning" 
+                    onClick={this.toggleRandomPlanet}               
+                >
+                    {`${toggleButtonText} planet`}
+                </button>
+            </div>
+        );
         
         return(
             <ErrorBoundary>
                 <SwapiServiceProvider value={this.swapiService}>
                     <div className="container">
                         <Header />
-
-                        <Row left={<PersonDetails itemId={1} />} right={<StarshipDetails itemId={9} />} />
-
                         {randomPlanet}
-                        <div className="d-flex flex-row-reverse mb-3">
-                            <button 
-                                className="toggle-button btn btn-warning" 
-                                onClick={this.toggleRandomPlanet}               
-                            >
-                                {`${toggleButtonText} planet`}
-                            </button>
-                        </div>
+                        {planetToggleButton}
+
                         <PeoplePage />
+                        <PlanetPage />
+                        <StarshipPage />
                     </div>
                 </SwapiServiceProvider>
             </ErrorBoundary>

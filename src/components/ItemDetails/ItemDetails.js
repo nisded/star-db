@@ -81,7 +81,7 @@ export default class ItemDetails extends Component {
 const ItemView = ({ item, imageUrl, children }) => {
     return (
         <React.Fragment>
-            <img src={imageUrl} alt="person" />
+            <img src={imageUrl} alt="item" />
             <div className="card-body">
                 <h3>{item.name}</h3>
                 <ul className="list-group list-group-flush">
